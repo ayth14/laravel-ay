@@ -14,13 +14,16 @@ the current user is: {{ $name }}
         {{-- @foreach ($tasks as $task)
             <div>{{ $task->title }}</div>
             @endforeach --}}
-        @forelse ($tasks as $task)
-            <div>
-                <a href="{{ route('tasks.show', ['id' => $task->id]) }}">{{ $task->title }}</a>
-            </div>
-        @empty
-            <div>There are not tasks!</div>
-        @endforelse
+        <ol>
+
+            @forelse ($tasks as $task)
+                <li>
+                    <a href="{{ route('tasks.show', ['id' => $task->id]) }}">{{ $task->title }}</a>
+                </li>
+            @empty
+                <li>There are not tasks!</li>
+            @endforelse
+        </ol>
         {{-- @else
         <div>There are not tasks!</div>
     @endif --}}

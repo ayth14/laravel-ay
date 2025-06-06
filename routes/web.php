@@ -1,9 +1,10 @@
 <?php
 
+use App\Models\Task;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
 
-class Task
+class Local_Task
 {
   public function __construct(
     public int $id,
@@ -17,7 +18,7 @@ class Task
 }
 
 $tasks = [
-  new Task(
+  new Local_Task(
     1,
     'Buy groceries',
     'Task 1 description',
@@ -26,7 +27,7 @@ $tasks = [
     '2023-03-01 12:00:00',
     '2023-03-01 12:00:00'
   ),
-  new Task(
+  new Local_Task(
     2,
     'Sell old stuff',
     'Task 2 description',
@@ -35,7 +36,7 @@ $tasks = [
     '2023-03-02 12:00:00',
     '2023-03-02 12:00:00'
   ),
-  new Task(
+  new Local_Task(
     3,
     'Learn programming',
     'Task 3 description',
@@ -44,7 +45,7 @@ $tasks = [
     '2023-03-03 12:00:00',
     '2023-03-03 12:00:00'
   ),
-  new Task(
+  new Local_Task(
     4,
     'Take dogs for a walk',
     'Task 4 description',
@@ -59,20 +60,26 @@ Route::get('/', function () {
   return redirect()->route('tasks.index');
 });
 
-Route::get('/tasks', function () use ($tasks) {
+Route::get('/tasks', function () {
+  // $tasks = Task::all();
+  $tasks = Task::latest()->get();
   return view('index', [
     "tasks" => $tasks
   ]);
 })->name('tasks.index');
 
 Route::get('/tasks/{id}', function ($id) use ($tasks) {
-  $task = collect($tasks)->firstWhere('id', $id);
+  $task = Task::findOrFail($id);
 
-  if (!$task) {
-    abort(Response::HTTP_NOT_FOUND);
-  }
+  // if (!$task) {
+  //   abort(Response::HTTP_NOT_FOUND);
+  // }
   return view('tasks.show', ['task' => $task]);
 })->name('tasks.show');
+
+Route::get('/create-task', function ($id) {
+  return view('tasks.create');
+})->name('task.create');
 
 // Route::get('/extra', function () {
 //     return 'Hello how are you?';
