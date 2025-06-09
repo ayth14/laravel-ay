@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Task;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
 
@@ -77,7 +78,7 @@ Route::get('/tasks/{id}', function ($id) use ($tasks) {
   return view('tasks.show', ['task' => $task]);
 })->name('tasks.show');
 
-Route::get('/create-task', function ($id) {
+Route::get('/create-task', function () {
   return view('tasks.create');
 })->name('task.create');
 
@@ -88,6 +89,22 @@ Route::get('/create-task', function ($id) {
 // Route::get('/hello', function () {
 //     return redirect()->route('extra');
 // });
+
+Route::post('/tasks', function (Request $request) {
+  $data = $request->validate([
+    'title'=> 'required|max:255',
+    'description'=> 'required',
+    'long_description'=> 'required',
+  ]);
+
+  $task = new Task();
+  $task->title = $data['title'];
+  $task->description = $data['description'];
+  $task->long_description = $data['long_description'];
+
+  
+
+})->name('tasks.submit');
 
 Route::fallback(function () {
   return 'You hit an Error!';

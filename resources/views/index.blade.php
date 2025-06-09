@@ -14,6 +14,9 @@ the current user is: {{ $name }}
         {{-- @foreach ($tasks as $task)
             <div>{{ $task->title }}</div>
             @endforeach --}}
+        <div>
+            <a href="{{ route('task.create') }}">+Add Task</a>
+        </div>
         <ol>
 
             @forelse ($tasks as $task)
