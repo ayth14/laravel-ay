@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Requests\TaskRequest;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -97,12 +98,8 @@ Route::get('/create-task', function () {
 //     return redirect()->route('extra');
 // });
 
-Route::post('/tasks', function (Request $request) {
-  $data = $request->validate([
-    'title' => 'required|max:255',
-    'description' => 'required',
-    'long_description' => 'required',
-  ]);
+Route::post('/tasks', function (TaskRequest $request) {
+  $data = $request->validated();
 
   $task = new Task;
   $task->title = $data['title'];
@@ -114,12 +111,8 @@ Route::post('/tasks', function (Request $request) {
     ->with('success', 'Task Added Successfully');
 })->name('tasks.submit');
 
-Route::patch('/tasks/{task}', function (Request $request, Task $task) {
-  $data = $request->validate([
-    'title' => 'required|max:255',
-    'description' => 'required',
-    'long_description' => 'required',
-  ]);
+Route::patch('/tasks/{task}', function (TaskRequest $request, Task $task) {
+  $data = $request->validated();
 
   // $task = Task::findOrFail($id);
   $task->title = $data['title'];
