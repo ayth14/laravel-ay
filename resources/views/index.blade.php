@@ -21,7 +21,7 @@ the current user is: {{ $name }}
 
             @forelse ($tasks as $task)
                 <li>
-                    <a href="{{ route('tasks.show', ['id' => $task->id]) }}">{{ $task->title }}</a>
+                    <a href="{{ route('tasks.show', ['task' => $task->id]) }}">{{ $task->title }}</a>
                 </li>
             @empty
                 <li>There are not tasks!</li>
