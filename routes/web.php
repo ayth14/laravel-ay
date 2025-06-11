@@ -18,44 +18,44 @@ class Local_Task
   ) {}
 }
 
-$tasks = [
-  new Local_Task(
-    1,
-    'Buy groceries',
-    'Task 1 description',
-    'Task 1 long description',
-    false,
-    '2023-03-01 12:00:00',
-    '2023-03-01 12:00:00'
-  ),
-  new Local_Task(
-    2,
-    'Sell old stuff',
-    'Task 2 description',
-    null,
-    false,
-    '2023-03-02 12:00:00',
-    '2023-03-02 12:00:00'
-  ),
-  new Local_Task(
-    3,
-    'Learn programming',
-    'Task 3 description',
-    'Task 3 long description',
-    true,
-    '2023-03-03 12:00:00',
-    '2023-03-03 12:00:00'
-  ),
-  new Local_Task(
-    4,
-    'Take dogs for a walk',
-    'Task 4 description',
-    null,
-    false,
-    '2023-03-04 12:00:00',
-    '2023-03-04 12:00:00'
-  ),
-];
+// $tasks = [
+//   new Local_Task(
+//     1,
+//     'Buy groceries',
+//     'Task 1 description',
+//     'Task 1 long description',
+//     false,
+//     '2023-03-01 12:00:00',
+//     '2023-03-01 12:00:00'
+//   ),
+//   new Local_Task(
+//     2,
+//     'Sell old stuff',
+//     'Task 2 description',
+//     null,
+//     false,
+//     '2023-03-02 12:00:00',
+//     '2023-03-02 12:00:00'
+//   ),
+//   new Local_Task(
+//     3,
+//     'Learn programming',
+//     'Task 3 description',
+//     'Task 3 long description',
+//     true,
+//     '2023-03-03 12:00:00',
+//     '2023-03-03 12:00:00'
+//   ),
+//   new Local_Task(
+//     4,
+//     'Take dogs for a walk',
+//     'Task 4 description',
+//     null,
+//     false,
+//     '2023-03-04 12:00:00',
+//     '2023-03-04 12:00:00'
+//   ),
+// ];
 
 Route::get('/', function () {
   return redirect()->route('tasks.index');
@@ -69,16 +69,15 @@ Route::get('/tasks', function () {
   ]);
 })->name('tasks.index');
 
-Route::get('/tasks/edit/{id}', function ($id) use ($tasks) {
-  $task = Task::findOrFail($id);
+Route::get('/tasks/edit/{task}', function (Task $task) {
 
   // if (!$task) {
   //   abort(Response::HTTP_NOT_FOUND);
   // }
   return view('tasks.edit', ['task' => $task]);
 })->name('tasks.edit');
-Route::get('/tasks/{id}', function ($id) {
-  $task = Task::findOrFail($id);
+Route::get('/tasks/{task}', function (Task $task) {
+  // $task = Task::findOrFail($id);
 
   // if (!$task) {
   //   abort(Response::HTTP_NOT_FOUND);
@@ -115,14 +114,14 @@ Route::post('/tasks', function (Request $request) {
     ->with('success', 'Task Added Successfully');
 })->name('tasks.submit');
 
-Route::patch('/tasks/{id}', function (Request $request, $id) {
+Route::patch('/tasks/{task}', function (Request $request, Task $task) {
   $data = $request->validate([
     'title' => 'required|max:255',
     'description' => 'required',
     'long_description' => 'required',
   ]);
 
-  $task = Task::findOrFail($id);
+  // $task = Task::findOrFail($id);
   $task->title = $data['title'];
   $task->description = $data['description'];
   $task->long_description = $data['long_description'];
