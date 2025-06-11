@@ -69,7 +69,15 @@ Route::get('/tasks', function () {
   ]);
 })->name('tasks.index');
 
-Route::get('/tasks/{id}', function ($id) use ($tasks) {
+Route::get('/tasks/edit/{id}', function ($id) use ($tasks) {
+  $task = Task::findOrFail($id);
+
+  // if (!$task) {
+  //   abort(Response::HTTP_NOT_FOUND);
+  // }
+  return view('tasks.edit', ['task' => $task]);
+})->name('tasks.edit');
+Route::get('/tasks/{id}', function ($id) {
   $task = Task::findOrFail($id);
 
   // if (!$task) {
@@ -103,8 +111,26 @@ Route::post('/tasks', function (Request $request) {
   $task->long_description = $data['long_description'];
 
   $task->save();
-  return redirect()->route('tasks.show', ['id' => $task->id])->with('success', 'Task Added Successfully');
+  return redirect()->route('tasks.show', ['id' => $task->id])
+    ->with('success', 'Task Added Successfully');
 })->name('tasks.submit');
+
+Route::patch('/tasks/{id}', function (Request $request, $id) {
+  $data = $request->validate([
+    'title' => 'required|max:255',
+    'description' => 'required',
+    'long_description' => 'required',
+  ]);
+
+  $task = Task::findOrFail($id);
+  $task->title = $data['title'];
+  $task->description = $data['description'];
+  $task->long_description = $data['long_description'];
+
+  $task->save();
+  return redirect()->route('tasks.show', ['id' => $task->id])
+    ->with('success', 'Task Updated Successfully');
+})->name('tasks.update');
 
 Route::fallback(function () {
   return 'You hit an Error!';
