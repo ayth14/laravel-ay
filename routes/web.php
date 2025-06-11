@@ -92,18 +92,18 @@ Route::get('/create-task', function () {
 
 Route::post('/tasks', function (Request $request) {
   $data = $request->validate([
-    'title'=> 'required|max:255',
-    'description'=> 'required',
-    'long_description'=> 'required',
+    'title' => 'required|max:255',
+    'description' => 'required',
+    'long_description' => 'required',
   ]);
 
-  $task = new Task();
+  $task = new Task;
   $task->title = $data['title'];
   $task->description = $data['description'];
   $task->long_description = $data['long_description'];
 
-  
-
+  $task->save();
+  return redirect()->route('tasks.show', ['id' => $task->id])->with('success', 'Task Added Successfully');
 })->name('tasks.submit');
 
 Route::fallback(function () {
