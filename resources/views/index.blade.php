@@ -13,6 +13,13 @@ the current user is: {{ $name }}
             display: flex;
             align-items: center;
         }
+        .edit-btn{
+          border: 1px solid #000;
+          background-color: lightgray;
+          color: #000;
+          padding: 2px 15px;
+          margin: 0 10px;
+        }
     </style>
 @endsection
 
@@ -30,6 +37,7 @@ the current user is: {{ $name }}
             @forelse ($tasks as $task)
                 <li class="task-action">
                     <a href="{{ route('tasks.show', ['task' => $task->id]) }}">{{ $task->title }}</a>
+                    <a href="{{ route('tasks.edit', ['task' => $task->id]) }}" class="edit-btn">Edit</a>
                     <form action="{{ route('tasks.delete', ['task' => $task->id]) }}" method="POST">
                         @csrf
                         @method('DELETE')
@@ -44,5 +52,11 @@ the current user is: {{ $name }}
         {{-- @else
         <div>There are not tasks!</div>
     @endif --}}
+    </div>
+
+    <div>
+        @if ($tasks->count())
+            {{ $tasks->links() }}
+        @endif
     </div>
 @endsection

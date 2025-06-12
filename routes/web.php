@@ -2,8 +2,8 @@
 
 use App\Http\Requests\TaskRequest;
 use App\Models\Task;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+// use Illuminate\Http\Request;
+// use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
 
 class Local_Task
@@ -64,7 +64,7 @@ Route::get('/', function () {
 
 Route::get('/tasks', function () {
   // $tasks = Task::all();
-  $tasks = Task::latest()->get();
+  $tasks = Task::latest()->paginate(10);
   return view('index', [
     "tasks" => $tasks
   ]);
@@ -118,6 +118,13 @@ Route::delete('/task/{task}', function (Task $task) {
   $task->delete();
   return redirect()->route('tasks.index')->with('success', 'Task Deleted Successfully!');
 })->name('tasks.delete');
+
+Route::put('/task/task-toggle/{task}', function (Task $task) {
+  $task->completed = !$task->completed;
+  $task->save();
+
+  return redirect()->back()->with('success', 'Task Updated Successfully!');
+})->name('tasks.status');
 
 Route::fallback(function () {
   return 'You hit an Error!';
