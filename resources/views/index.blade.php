@@ -7,6 +7,14 @@
 {{-- @isset($name)
 the current user is: {{ $name }}
 @endisset --}}
+@section('styles')
+    <style>
+        .task-action {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+@endsection
 
 @section('main-content')
     <div>
@@ -20,13 +28,19 @@ the current user is: {{ $name }}
         <ol>
 
             @forelse ($tasks as $task)
-                <li>
+                <li class="task-action">
                     <a href="{{ route('tasks.show', ['task' => $task->id]) }}">{{ $task->title }}</a>
+                    <form action="{{ route('tasks.delete', ['task' => $task->id]) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit">Delete</button>
+                    </form>
                 </li>
             @empty
                 <li>There are not tasks!</li>
             @endforelse
         </ol>
+
         {{-- @else
         <div>There are not tasks!</div>
     @endif --}}

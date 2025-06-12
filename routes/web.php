@@ -99,30 +99,25 @@ Route::get('/create-task', function () {
 // });
 
 Route::post('/tasks', function (TaskRequest $request) {
-  $data = $request->validated();
 
-  $task = new Task;
-  $task->title = $data['title'];
-  $task->description = $data['description'];
-  $task->long_description = $data['long_description'];
+  $task = Task::create($request->validated());
 
-  $task->save();
-  return redirect()->route('tasks.show', ['id' => $task->id])
+  return redirect()->route('tasks.show', ['task' => $task->id])
     ->with('success', 'Task Added Successfully');
 })->name('tasks.submit');
 
 Route::patch('/tasks/{task}', function (TaskRequest $request, Task $task) {
-  $data = $request->validated();
 
-  // $task = Task::findOrFail($id);
-  $task->title = $data['title'];
-  $task->description = $data['description'];
-  $task->long_description = $data['long_description'];
+  $task->update($request->validated());
 
-  $task->save();
-  return redirect()->route('tasks.show', ['id' => $task->id])
+  return redirect()->route('tasks.show', ['task' => $task->id])
     ->with('success', 'Task Updated Successfully');
 })->name('tasks.update');
+
+Route::delete('/task/{task}', function (Task $task) {
+  $task->delete();
+  return redirect()->route('tasks.index')->with('success', 'Task Deleted Successfully!');
+})->name('tasks.delete');
 
 Route::fallback(function () {
   return 'You hit an Error!';
