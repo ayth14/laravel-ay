@@ -7,21 +7,7 @@
 {{-- @isset($name)
 the current user is: {{ $name }}
 @endisset --}}
-@section('styles')
-    <style>
-        .task-action {
-            display: flex;
-            align-items: center;
-        }
-        .edit-btn{
-          border: 1px solid #000;
-          background-color: lightgray;
-          color: #000;
-          padding: 2px 15px;
-          margin: 0 10px;
-        }
-    </style>
-@endsection
+
 
 @section('main-content')
     <div>
@@ -29,20 +15,28 @@ the current user is: {{ $name }}
         {{-- @foreach ($tasks as $task)
             <div>{{ $task->title }}</div>
             @endforeach --}}
-        <div>
-            <a href="{{ route('task.create') }}">+Add Task</a>
-        </div>
+        <nav class="my-3">
+            <a class="link" href="{{ route('task.create') }}">
+                + Add task
+            </a>
+        </nav>
         <ol>
 
             @forelse ($tasks as $task)
-                <li class="task-action">
-                    <a href="{{ route('tasks.show', ['task' => $task->id]) }}">{{ $task->title }}</a>
-                    <a href="{{ route('tasks.edit', ['task' => $task->id]) }}" class="edit-btn">Edit</a>
-                    <form action="{{ route('tasks.delete', ['task' => $task->id]) }}" method="POST">
+                <li
+                    class="flex items-center mb-2 border-dashed border-black border-2 p-2 max-w-fit rounded-md {{ $task->completed ? 'bg-green-400' : 'bg-red-400' }}">
+                    <form action="{{ route('tasks.status', ['task' => $task]) }}" method="POST" class="pr-2">
                         @csrf
-                        @method('DELETE')
-                        <button type="submit">Delete</button>
+                        @method('PUT')
+                        <input type="checkbox" name="task-status" id="taskStatus" {{ $task->completed ? 'checked' : '' }}
+                            onchange="this.form.submit()">
                     </form>
+                    <a href="{{ route('tasks.show', ['task' => $task->id]) }}" @class([
+                        'font-semibold' => !$task->completed,
+                        'line-through' => $task->completed,
+                    ])>
+                        {{ $task->title }}
+                    </a>
                 </li>
             @empty
                 <li>There are not tasks!</li>
