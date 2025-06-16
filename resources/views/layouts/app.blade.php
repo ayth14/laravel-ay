@@ -19,9 +19,9 @@
 <body class="container mx-auto mt-7 px-5">
     <h1 class="text-3xl font-bold">@yield('title')</h1>
 
-    @if (session()->has('success'))
-        {{-- alpine js container for enabling the  interaction for the content --}}
-        <div x-data="{ flash: true }">
+    <div x-data="{ flash: true }">
+        @if (session()->has('success'))
+            {{-- alpine js container for enabling the  interaction for the content --}}
             <div x-show="flash"
                 class="relative rounded border border-green-400 bg-green-200 px-4 py-3 text-lg text-green-700 max-w-lg my-5"
                 role="alert">
@@ -31,12 +31,12 @@
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
-    @endif
+        @endif
 
 
-    <main>
-        @yield('main-content')
-    </main>
+        <main>
+            @yield('main-content')
+        </main>
     </div>
 </body>
 
